@@ -27,7 +27,6 @@ footer {
   right: 0;
 }
 
-/* Selecting any p element inside of a footer element */
 footer p {
   color: #8a4fff;
 }
@@ -42,7 +41,6 @@ footer p {
   border-radius: 5px;
 }
 
-/* Selecting any p element inside of an element with the .balance-card class */
 .balance-card p {
   font-size: 1.2rem;
   font-weight: bold;

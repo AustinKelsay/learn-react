@@ -6,9 +6,26 @@ import axios from "axios";
 import "./App.css";
 
 function App() {
+  // useState lets us store/update data inside of this component
+  // Though this data will be lost on a refresh since we dont have a database
   const [price, setPrice] = useState(null);
   const [balance, setBalance] = useState(null);
 
+  const getPrice = () => {
+    axios
+      .get("https://api.coinbase.com/v2/prices/BTC-USD/spot")
+      .then((res) => {
+        setPrice(res.data.data.amount);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // useEffect is a 'hook' or special function that will run code based on a trigger
+  // On line 29 the brackets hold the trigger
+  // Since it is empty [] that means this code will run every time the page is refreshed
+  // So now we can call the LNBits API when the page loads to get our current wallet balance
   useEffect(() => {
     const headers = {
       "X-Api-Key": "f007cbf3992046f8ae00be3c7bc58b37",
@@ -22,16 +39,18 @@ function App() {
       .catch((err) => console.log(err));
   }, []);
 
-  setTimeout(() => {
-    axios
-      .get("https://api.coinbase.com/v2/prices/BTC-USD/spot")
-      .then((res) => {
-        setPrice(res.data.data.amount);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, 1000);
+  // Get the price on page load
+  useEffect(() => {
+    getPrice();
+  }, []);
+
+  // Call the API to get the price of BTC every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getPrice();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="App">
