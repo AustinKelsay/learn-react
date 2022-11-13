@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ChartImage from "./assets/BTCUSD.png";
+import Chart from "./components/Chart";
 import Buttons from "./components/Buttons";
 import Transactions from "./components/Transactions";
 import axios from "axios";
@@ -10,12 +10,43 @@ function App() {
   // Though this data will be lost on a refresh since we dont have a database
   const [price, setPrice] = useState(null);
   const [balance, setBalance] = useState(null);
+  const [chartData, setChartData] = useState(null);
 
   const getPrice = () => {
     axios
       .get("https://api.coinbase.com/v2/prices/BTC-USD/spot")
       .then((res) => {
         setPrice(res.data.data.amount);
+
+        const timestamp = Date.now();
+        const dateFormat = new Date(timestamp);
+        // Get date in hours, minutes, seconds
+        const formattedDate = dateFormat.toLocaleTimeString("en-US");
+        setChartData((prev) => {
+          if (!prev)
+            return [
+              {
+                // New current unix timestamp only down to the second
+                x: timestamp,
+                y: Number(res.data.data.amount),
+              },
+            ];
+          // If the timestamp or price has not changed, we dont want to add a new point
+          if (
+            prev[prev.length - 1].x === timestamp &&
+            prev[prev.length - 1].y === Number(res.data.data.amount)
+          )
+            return prev;
+          return [
+            ...prev,
+            // New current local time down to the minute
+            // format time to be a number
+            {
+              x: timestamp,
+              y: Number(res.data.data.amount),
+            },
+          ];
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -34,7 +65,8 @@ function App() {
       .get("https://legend.lnbits.com/api/v1/wallet", { headers })
       .then((res) => {
         console.log(res.data);
-        setBalance(res.data.balance);
+        // Divide our balance by 1000 since it is denomiated in millisats
+        setBalance(res.data.balance / 1000);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -73,7 +105,7 @@ function App() {
           <Transactions />
         </div>
         <div className="row-item">
-          <img src={ChartImage} alt="chart" />
+          <Chart chartData={chartData} />
         </div>
       </div>
       <footer>
