@@ -7,7 +7,7 @@ export const Transactions = () => {
 
   useEffect(() => {
     const headers = {
-      "X-Api-Key": "f007cbf3992046f8ae00be3c7bc58b37",
+      "X-Api-Key": "52cac212fc664da393ac45df991fdb84",
     };
     axios
       .get("https://legend.lnbits.com/api/v1/payments", { headers })
@@ -20,15 +20,16 @@ export const Transactions = () => {
   }, []);
 
   const parseTx = (tx) => {
+    // turn unix timestamp into a date with utc time
+    const date = new Date(tx.time * 1000);
+    const formattedDate = date.toLocaleDateString("en-US");
+
     if (tx.amount > 0) {
       if (tx.pending) return null;
-      // turn unix timestamp into a date with utc time
-      const date = new Date(tx.time * 1000);
-      const formattedDate = date.toLocaleDateString("en-US");
       return (
         <div className="tx-item">
-          <p>Received from {tx.bolt11}</p>
-          <p>+ {tx.amount / 1000} sats</p>
+          <p>Received from {tx.bolt11.substring(0, 25)}...</p>
+          <p>+{tx.amount / 1000} sats</p>
           <p className="transaction-date">{formattedDate}</p>
         </div>
       );
@@ -42,9 +43,9 @@ export const Transactions = () => {
         return null;
       return (
         <div className="tx-item">
-          <p>Sent with {tx.bolt11}</p>
-          <p className="tx-amount">- {tx.amount / 1000} sats</p>
-          <p className="tx-date">{tx.time}</p>
+          <p>Sent with {tx.bolt11.substring(0, 25)}...</p>
+          <p className="tx-amount">{tx.amount / 1000} sats</p>
+          <p className="transaction-date">{formattedDate}</p>
         </div>
       );
     }
@@ -52,6 +53,7 @@ export const Transactions = () => {
 
   return (
     <div>
+      <h3>Transactions</h3>
       {transactions.map((transaction) => {
         return parseTx(transaction);
       })}

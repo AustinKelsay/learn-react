@@ -19,9 +19,6 @@ function App() {
         setPrice(res.data.data.amount);
 
         const timestamp = Date.now();
-        const dateFormat = new Date(timestamp);
-        // Get date in hours, minutes, seconds
-        const formattedDate = dateFormat.toLocaleTimeString("en-US");
         setChartData((prev) => {
           if (!prev)
             return [
@@ -33,7 +30,7 @@ function App() {
             ];
           // If the timestamp or price has not changed, we dont want to add a new point
           if (
-            prev[prev.length - 1].x === timestamp &&
+            prev[prev.length - 1].x === timestamp ||
             prev[prev.length - 1].y === Number(res.data.data.amount)
           )
             return prev;
@@ -59,7 +56,7 @@ function App() {
   // So now we can call the LNBits API when the page loads to get our current wallet balance
   useEffect(() => {
     const headers = {
-      "X-Api-Key": "f007cbf3992046f8ae00be3c7bc58b37",
+      "X-Api-Key": "52cac212fc664da393ac45df991fdb84",
     };
     axios
       .get("https://legend.lnbits.com/api/v1/wallet", { headers })
