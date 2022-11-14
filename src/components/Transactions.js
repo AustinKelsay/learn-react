@@ -37,7 +37,7 @@ export const Transactions = () => {
 
     if (tx.amount < 0) {
       if (
-        tx.preimage ===
+        tx.preimage !==
         "0000000000000000000000000000000000000000000000000000000000000000"
       )
         return null;

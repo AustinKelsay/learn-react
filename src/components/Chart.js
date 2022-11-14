@@ -12,17 +12,16 @@ const Chart = ({ chartData }) => {
     },
   ];
 
-  console.log(chartData);
-
   return (
     <div style={{ paddingLeft: "1%" }}>
       {chartData && chartData.length <= 1 ? (
+        // ToDo: Add a loading spinner
         <p>Loading</p>
       ) : (
         <LineChart
           xLabel="Time"
-          //  ToDo: Reassign height and width to fit on mobile screens
           height={300}
+          //  ToDo: Reassign width to be responsive based on screen size
           width={550}
           data={data}
           onPointHover={(obj) => `price: $${obj.y}<br />time: ${obj.x}`}
