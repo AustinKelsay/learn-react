@@ -1,3 +1,7 @@
+label {
+  padding-top: 2%;
+}
+
 .buttons {
   width: 50%;
   margin: 0 auto;
@@ -6,7 +10,15 @@
   justify-content: space-around;
 }
 
-.buttons button {
+form {
+  width: 100%;
+}
+
+form .button {
+  margin: 10% auto;
+}
+
+.button {
   background-color: #ffbf46;
   border: 2px solid #8a4fff;
   border-radius: 5px;
@@ -18,4 +30,9 @@
 .buttons button:hover {
   cursor: pointer;
   opacity: 0.6;
+}
+
+.close-button {
+  cursor: pointer;
+  text-align: end;
 }
