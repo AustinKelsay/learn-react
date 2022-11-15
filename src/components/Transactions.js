@@ -1,23 +1,7 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 import "./Transactions.css";
 
-export const Transactions = () => {
-  const [transactions, setTransactions] = useState([]);
-
-  useEffect(() => {
-    const headers = {
-      "X-Api-Key": "52cac212fc664da393ac45df991fdb84",
-    };
-    axios
-      .get("https://legend.lnbits.com/api/v1/payments", { headers })
-      .then((res) => {
-        console.log(res.data);
-        setTransactions(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
+export const Transactions = ({ transactions }) => {
   // A function to turn each of our transactions into the correct table row
   const parseTx = (tx) => {
     // turn unix timestamp into a date
@@ -28,7 +12,7 @@ export const Transactions = () => {
     if (tx.amount > 0) {
       if (tx.pending) return null;
       return (
-        <div className="tx-item">
+        <div key={tx.checking_id} className="tx-item">
           <p>Received from {tx.bolt11.substring(0, 25)}...</p>
           <p>+{tx.amount / 1000} sats</p>
           <p className="transaction-date">{formattedDate}</p>
@@ -43,7 +27,7 @@ export const Transactions = () => {
       )
         return null;
       return (
-        <div className="tx-item">
+        <div key={tx.checking_id} className="tx-item">
           <p>Sent with {tx.bolt11.substring(0, 25)}...</p>
           <p className="tx-amount">{tx.amount / 1000} sats</p>
           <p className="transaction-date">{formattedDate}</p>

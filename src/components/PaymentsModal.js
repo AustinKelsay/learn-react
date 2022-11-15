@@ -89,6 +89,7 @@ const PaymentsModal = ({ modalState, setModalState }) => {
       isOpen={modalState.open}
       style={customStyles}
       contentLabel="Example Modal"
+      appElement={document.getElementById("root")}
     >
       <p
         className="close-button"
