@@ -9,7 +9,7 @@ export const Buttons = () => {
   });
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div>
       <div className="buttons">
         <button
           className="button"

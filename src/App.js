@@ -19,25 +19,25 @@ function App() {
         setPrice(res.data.data.amount);
 
         const timestamp = Date.now();
-        setChartData((prev) => {
-          if (!prev)
+        setChartData((prevState) => {
+          // If we have no previous state, create a new array with the new price data
+          if (!prevState)
             return [
               {
-                // New current unix timestamp only down to the second
                 x: timestamp,
                 y: Number(res.data.data.amount),
               },
             ];
           // If the timestamp or price has not changed, we dont want to add a new point
           if (
-            prev[prev.length - 1].x === timestamp ||
-            prev[prev.length - 1].y === Number(res.data.data.amount)
+            prevState[prevState.length - 1].x === timestamp ||
+            prevState[prevState.length - 1].y === Number(res.data.data.amount)
           )
-            return prev;
+            return prevState;
+          // If we have previous state than keep it and add the new price data to the end of the array
           return [
-            ...prev,
-            // New current local time down to the minute
-            // format time to be a number
+            // Here we use the "spread operator" to copy the previous state
+            ...prevState,
             {
               x: timestamp,
               y: Number(res.data.data.amount),
@@ -51,7 +51,7 @@ function App() {
   };
 
   // useEffect is a 'hook' or special function that will run code based on a trigger
-  // On line 29 the brackets hold the trigger
+  // On line 71 the brackets hold the trigger
   // Since it is empty [] that means this code will run every time the page is refreshed
   // So now we can call the LNBits API when the page loads to get our current wallet balance
   useEffect(() => {
@@ -60,11 +60,13 @@ function App() {
     };
     axios
       .get("https://legend.lnbits.com/api/v1/wallet", { headers })
+      // .then is a promise that will run when the API call is successful
       .then((res) => {
         console.log(res.data);
         // Divide our balance by 1000 since it is denomiated in millisats
         setBalance(res.data.balance / 1000);
       })
+      // .catch is a promise that will run if the API call fails
       .catch((err) => console.log(err));
   }, []);
 
@@ -73,7 +75,7 @@ function App() {
     getPrice();
   }, []);
 
-  // Call the API to get the price of BTC every 5 seconds
+  // Call the API to get the price of BTC every 5 seconds after page load
   useEffect(() => {
     const interval = setInterval(() => {
       getPrice();

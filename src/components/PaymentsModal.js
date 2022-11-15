@@ -67,6 +67,23 @@ const PaymentsModal = ({ modalState, setModalState }) => {
     return;
   };
 
+  // Function to clear all of our state when we close the modal
+  const clearForms = () => {
+    setModalState({
+      type: "",
+      open: false,
+    });
+    setInvoice("");
+    setPaymentInfo({
+      paymentHash: "",
+      checkingId: "",
+    });
+    setFormData({
+      amount: 0,
+      invoiceToPay: "",
+    });
+  };
+
   return (
     <Modal
       isOpen={modalState.open}
@@ -76,29 +93,14 @@ const PaymentsModal = ({ modalState, setModalState }) => {
       <p
         className="close-button"
         onClick={() => {
-          setModalState({
-            type: "",
-            open: false,
-          });
-          setInvoice("");
-          setPaymentInfo({
-            paymentHash: "",
-            checkingId: "",
-          });
+          clearForms();
         }}
       >
         X
       </p>
       {/* If it is a send */}
       {modalState.type === "send" && (
-        <form
-          style={{
-            margin: "2% auto",
-            display: "flex",
-            flexDirection: "column",
-            textAlign: "center",
-          }}
-        >
+        <form>
           <label>paste an invoice</label>
           <input
             type="text"
@@ -114,14 +116,7 @@ const PaymentsModal = ({ modalState, setModalState }) => {
       )}
       {/* If it is a receive */}
       {modalState.type === "receive" && (
-        <form
-          style={{
-            margin: "2% auto",
-            display: "flex",
-            flexDirection: "column",
-            textAlign: "center",
-          }}
-        >
+        <form>
           <label>enter amount</label>
           <input
             type="number"
@@ -138,23 +133,19 @@ const PaymentsModal = ({ modalState, setModalState }) => {
       )}
       {/* If we are displaying our newly created invoice */}
       {invoice && (
-        <div>
+        <section>
           <h3>Invoice created</h3>
-          <p style={{ wordWrap: "break-word" }}>{invoice}</p>
+          <p>{invoice}</p>
           {/* ToDo: Create a QR code out of this invoice as well */}
-        </div>
+        </section>
       )}
       {/* If we are displaying the status of our successful payment */}
       {paymentInfo.paymentHash && (
-        <div>
-          <h3 style={{ textAlign: "center" }}>Payment sent</h3>
-          <p style={{ wordWrap: "break-word" }}>
-            Payment hash: {paymentInfo.paymentHash}
-          </p>
-          <p style={{ wordWrap: "break-word" }}>
-            Checking id: {paymentInfo.checkingId}
-          </p>
-        </div>
+        <section>
+          <h3>Payment sent</h3>
+          <p>Payment hash: {paymentInfo.paymentHash}</p>
+          <p>Checking id: {paymentInfo.checkingId}</p>
+        </section>
       )}
     </Modal>
   );

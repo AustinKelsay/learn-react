@@ -10,14 +10,6 @@ label {
   justify-content: space-around;
 }
 
-form {
-  width: 100%;
-}
-
-form .button {
-  margin: 10% auto;
-}
-
 .button {
   background-color: #ffbf46;
   border: 2px solid #8a4fff;
@@ -30,9 +22,4 @@ form .button {
 .buttons button:hover {
   cursor: pointer;
   opacity: 0.6;
-}
-
-.close-button {
-  cursor: pointer;
-  text-align: end;
 }

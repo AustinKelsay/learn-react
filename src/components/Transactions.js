@@ -13,14 +13,15 @@ export const Transactions = () => {
       .get("https://legend.lnbits.com/api/v1/payments", { headers })
       .then((res) => {
         console.log(res.data);
-        // Divide our balance by 1000 since it is denomiated in millisats
         setTransactions(res.data);
       })
       .catch((err) => console.log(err));
   }, []);
 
+  // A function to turn each of our transactions into the correct table row
   const parseTx = (tx) => {
-    // turn unix timestamp into a date with utc time
+    // turn unix timestamp into a date
+    // Todo: format date further to include hours, minutes, and seconds
     const date = new Date(tx.time * 1000);
     const formattedDate = date.toLocaleDateString("en-US");
 
