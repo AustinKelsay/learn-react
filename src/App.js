@@ -6,7 +6,7 @@ import axios from "axios";
 import "./App.css";
 
 function App() {
-  // useState lets us store/update data inside of this component
+  // useState lets us store/update/pass data from inside of this component and also refresh the component when the data changes
   // Though this data will be lost on a refresh since we dont have a database
   const [price, setPrice] = useState(null);
   const [balance, setBalance] = useState(null);
@@ -14,6 +14,9 @@ function App() {
   const [transactions, setTransactions] = useState([]);
 
   const getPrice = () => {
+    // Axios is a library that makes it easy to make http requests
+    // After we make a request, we can use the .then() method to handle the response asychronously
+    // This is an alternative to using async/await
     axios
       .get("https://api.coinbase.com/v2/prices/BTC-USD/spot")
       // .then is a promise that will run when the API call is successful
@@ -27,24 +30,22 @@ function App() {
       });
   };
 
-  // useEffect is a 'hook' or special function that will run code based on a trigger
-  // On line 71 the brackets hold the trigger
-  // Since it is empty [] that means this code will run every time the page is refreshed
-  // So now we can call the LNBits API when the page loads to get our current wallet balance
   const getWalletBalance = () => {
+    // ToDo: Lookup how to move the X-API-Key to a .env file to keep it secret for when we push to Github
     const headers = {
       "X-Api-Key": "52cac212fc664da393ac45df991fdb84",
     };
     axios
       .get("https://legend.lnbits.com/api/v1/wallet", { headers })
       .then((res) => {
-        // Divide our balance by 1000 since it is denomiated in millisats
+        // Divide our balance by 1000 since it is denominated in millisats
         setBalance(res.data.balance / 1000);
       })
       .catch((err) => console.log(err));
   };
 
   const getTransactions = () => {
+    // ToDo: Lookup how to move the X-API-Key to a .env file to keep it secret for when we push to Github
     const headers = {
       "X-Api-Key": "52cac212fc664da393ac45df991fdb84",
     };
@@ -58,6 +59,7 @@ function App() {
 
   const updateChartData = (currentPrice) => {
     const timestamp = Date.now();
+    // We are able to grab the previous state to look at it and do logic before adding new data to it
     setChartData((prevState) => {
       // If we have no previous state, create a new array with the new price data
       if (!prevState)
@@ -85,15 +87,18 @@ function App() {
     });
   };
 
-  // Get the price on page load
+  // useEffect is a 'hook' or special function that will run code based on a trigger
+  // The brackets hold the trigger that determines when the code inside of useEffect will run
+  // Since it is empty [] that means this code will run once on page load
   useEffect(() => {
     getPrice();
     getWalletBalance();
     getTransactions();
   }, []);
 
-  // Call the API to get the price of BTC every 5 seconds after page load
+  // Run these functions every 5 seconds after initial page load
   useEffect(() => {
+    // setInterval will run whatever is in the callback function every 5 seconds
     const interval = setInterval(() => {
       getPrice();
       getWalletBalance();

@@ -13,11 +13,14 @@ const customStyles = {
 };
 
 const PaymentsModal = ({ modalState, setModalState }) => {
+  // Our state for the info we will send to either generate a new invoice or pay an invoice
   const [formData, setFormData] = useState({
     amount: 0,
     invoiceToPay: "",
   });
+  // Our state for storing the invoice we created to be paid
   const [invoice, setInvoice] = useState("");
+  // Our state for the invoice we paid
   const [paymentInfo, setPaymentInfo] = useState({
     paymentHash: "",
     checkingId: "",
@@ -57,6 +60,7 @@ const PaymentsModal = ({ modalState, setModalState }) => {
     const data = {
       amount: formData.amount,
       out: false,
+      // ToDo: Add additional form for user to be able to customize the memo
       memo: "LNBits",
     };
     axios
